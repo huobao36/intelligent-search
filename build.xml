@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cmcc-search" default="deploy" basedir=".">
+	<property name="deploy.base.dir" value="/data/deploy/${ant.project.name}" />
+	<property name="build.version" value="0.1.0" />
+	<property name="bin.dir" value="bin" />
+	<property name="lib.dir" value="lib" />
+	<property name="java.src.dir" value="src/main/java" />
+	<property name="java.test.dir" value="src/test/java" />
+	<property name="view.src.dir" value="src/main/webapp/jsp" />
+	<property name="conf.src.dir" value="src/main/conf" />
+	<property name="data.dir" value="data" />
+	<property name="build.base.dir" value="build" />
+	<property name="build.bin.dir" value="${build.base.dir}/bin" />
+	<property name="build.lib.dir" value="${build.base.dir}/lib" />
+	<property name="build.log.dir" value="${build.base.dir}/log" />
+	<property name="build.web.dir" value="${build.base.dir}/webapp" />
+	<property name="build.web.inf.dir" value="${build.web.dir}/WEB-INF" />
+	<property name="build.web.bin.dir" value="${build.web.inf.dir}/classes" />
+	<property name="build.web.lib.dir" value="${build.web.inf.dir}/lib" />
+	
+	
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="init">
+		<mkdir dir="${build.web.inf.dir}" />
+		<mkdir dir="${build.web.bin.dir}" />
+		<mkdir dir="${build.web.lib.dir}" />
+	</target>
+	
+	<target name="compile" depends="clean, init">
+		<javac debug="on" debuglevel="lines,vars,source" srcdir="${java.src.dir}" destdir="${build.web.bin.dir}" encoding="UTF-8" nowarn="true" source="1.6" target="1.6">
+			<classpath refid="classpath" />
+		</javac>
+		<jar destfile="${build.lib.dir}/${ant.project.name}-${build.version}.jar">
+			<manifest>
+				<attribute name="Built-By" value="Louis Deng" />
+				<attribute name="Specification-Title" value="cmcc" />
+				<attribute name="Specification-Vendor" value="cmcc" />
+				<attribute name="Implementation-Version" value="${build.version}" />
+				<attribute name="Implementation-Vendor" value="cmcc" />
+			</manifest>
+			<fileset dir="${build.web.bin.dir}">
+				<include name="cmcc/**/*" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="build" depends="compile">
+	    <!-- 
+		<mkdir dir="${bin.dir}" />
+		<copy todir="${build.bin.dir}">
+			<fileset dir="${bin.dir}">
+				<include name="**/*" />
+			</fileset>
+			 
+			<fileset dir="${shell.src.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		-->
+		<copy todir="${build.web.bin.dir}">
+			<fileset dir="${conf.src.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+	
+		<copy todir="${build.web.inf.dir}">
+			<fileset dir="${conf.src.dir}">
+				<include name="web.xml" />
+				<include name="cmcc-search-servlet.xml" />
+				<include name="applicationContext.xml" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.web.lib.dir}">
+			<fileset dir="${lib.dir}">
+				<include name="**/*" />
+				<exclude name="compile" />
+				<exclude name="compile/**/*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="deploy" depends="build">
+		<delete dir="${deploy.base.dir}/webapp" />
+		<copy todir="${deploy.base.dir}">
+			<fileset dir="${build.base.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${deploy.base.dir}/webapp">
+			<fileset dir="${data.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${deploy.base.dir}/webapp/jsp">
+			<fileset dir="${view.src.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.base.dir}" />
+	</target>
+</project>
