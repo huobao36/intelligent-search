@@ -26,7 +26,7 @@ public class HtmlUtilTest {
 	
 	@Test
 	public void testParseHtmlFile() {
-		final File testDir = new File("/Users/cmcc/Downloads/10-数据流量专区");
+		final File testDir = new File("/Users/louis36/Downloads/mobile/10-数据流量专区");
 		final String destFile = "knowledge.txt";
 		Iterator<File> iter = FileUtils.iterateFiles(testDir,
 				new String[] { "htm" }, true);
@@ -58,5 +58,4 @@ public class HtmlUtilTest {
 				}
 		}
 	}
-	
 }

@@ -102,4 +102,6 @@ public class AnalyzerTest {
 		printTokenAnalyzed(AnalyzerFactory.ANALYZER_IK);
 		printTokenAnalyzed(AnalyzerFactory.ANALYZER_PAODING);
 	}
+	
+	
 }
